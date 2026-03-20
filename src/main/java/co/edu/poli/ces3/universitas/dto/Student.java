@@ -1,6 +1,8 @@
 package co.edu.poli.ces3.universitas.dto;
 
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Student {
     private String id;
@@ -8,6 +10,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private int age;
+    private List<String[]> subjects;
     
     // Additional attributes
     private String email;
@@ -17,14 +20,16 @@ public class Student {
 
     // Empty constructor (often needed for frameworks)
     public Student() {
+        this.subjects = new ArrayList<>();
     }
 
     public Student(String lastName){
         this.lastName = lastName;
+        this.subjects = new ArrayList<>();
     }
 
     public Student(Integer x){
-
+        this.subjects = new ArrayList<>();
     }
 
     // Full constructor (overloaded)
@@ -39,6 +44,7 @@ public class Student {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.gpa = gpa;
+        this.subjects = new ArrayList<>();
     }
 
     // Getters and Setters
@@ -56,6 +62,13 @@ public class Student {
 
     public int getAge() { return age; }
     public void setAge(int age) { this.age = age; }
+
+    public List<String[]> getSubjects() { return subjects; }
+    public void setSubjects(List<String[]> subjects) { this.subjects = subjects; }
+
+    public void addSubject(String code, String name) {
+        this.subjects.add(new String[]{code, name});
+    }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
