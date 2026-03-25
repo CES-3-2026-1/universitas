@@ -1,6 +1,10 @@
 package co.edu.poli.ces3.universitas;
 
+import co.edu.poli.ces3.universitas.dto.Student;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -8,18 +12,17 @@ import jakarta.servlet.annotation.*;
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
     private String message;
-    private String[] students;
+    private List<Student> students;
 
     public void init() {
         message = "Listado de Estudiantes";
-        students = new String[]{
-                "Juan Perez",
-                "Maria Garcia",
-                "Carlos Rodriguez",
-                "Ana Martinez",
-                "Luis Hernandez",
-                "Elena Gomez"
-        };
+        students = new ArrayList<>();
+        students.add(new Student(UUID.randomUUID().toString(), "101010", "Juan", "Perez", 20, "juan@test.com", "123", "Calle 1", 4.5));
+        students.add(new Student(UUID.randomUUID().toString(), "202020", "Maria", "Garcia", 21, "maria@test.com", "456", "Calle 2", 4.8));
+        students.add(new Student(UUID.randomUUID().toString(), "303030", "Carlos", "Rodriguez", 22, "carlos@test.com", "789", "Calle 3", 3.9));
+        students.add(new Student(UUID.randomUUID().toString(), "404040", "Ana", "Martinez", 19, "ana@test.com", "012", "Calle 4", 4.2));
+        students.add(new Student(UUID.randomUUID().toString(), "505050", "Luis", "Hernandez", 23, "luis@test.com", "345", "Calle 5", 3.5));
+        students.add(new Student(UUID.randomUUID().toString(), "606060", "Elena", "Gomez", 20, "elena@test.com", "678", "Calle 6", 4.7));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,8 +46,8 @@ public class HelloServlet extends HttpServlet {
         out.println("<div class='container'>");
         out.println("<h1>" + message + "</h1>");
         out.println("<ul>");
-        for (String student : students) {
-            out.println("<li>" + student + "</li>");
+        for (Student student : students) {
+            out.println("<li>" + student.getFirstName() + " " + student.getLastName() + "</li>");
         }
         out.println("</ul>");
         out.println("</div>");
