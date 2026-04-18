@@ -89,4 +89,25 @@ public class StudentServlet extends HttpServlet {
         }
         out.flush();
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Leemos el estudiante desde el cuerpo de la petición (JSON)
+        Student newStudent = this.gson.fromJson(request.getReader(), Student.class);
+
+        // Generamos un ID si no viene en la petición
+        if (newStudent.getId() == null || newStudent.getId().isEmpty()) {
+            newStudent.setId(UUID.randomUUID().toString());
+        }
+
+        this.students.add(newStudent);
+
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        out.print(this.gson.toJson(newStudent));
+        out.flush();
+    }
 }
