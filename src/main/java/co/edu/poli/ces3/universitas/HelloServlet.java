@@ -15,7 +15,7 @@ public class HelloServlet extends HttpServlet {
     private List<Student> students;
 
     public void init() {
-        message = "Listado de Estudiantes";
+        message = "Listado de Estudiantes?";
         students = new ArrayList<>();
         students.add(new Student(UUID.randomUUID().toString(), "101010", "Juan", "Perez", 20, "juan@test.com", "123", "Calle 1", 4.5));
         students.add(new Student(UUID.randomUUID().toString(), "202020", "Maria", "Garcia", 21, "maria@test.com", "456", "Calle 2", 4.8));
