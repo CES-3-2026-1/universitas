@@ -27,7 +27,11 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+<<<<<<< HEAD
             <version>2.10.1</version>
+=======
+            <version>2.11.0</version>
+>>>>>>> 97cbf69d758f79635355efb026fbaf0a6c41b02b
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
