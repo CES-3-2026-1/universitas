@@ -110,4 +110,37 @@ public class StudentServlet extends HttpServlet {
         out.print(this.gson.toJson(newStudent));
         out.flush();
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido\"}");
+        } else {
+            Student studentToDelete = null;
+            for (Student s : students) {
+                if (s.getId().equals(studentId)) {
+                    studentToDelete = s;
+                    break;
+                }
+            }
+
+            if (studentToDelete != null) {
+                students.remove(studentToDelete);
+                response.setStatus(HttpServletResponse.SC_OK);
+                out.print("{\"message\": \"Estudiante eliminado correctamente\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"El estudiante no existe\"}");
+            }
+        }
+        out.flush();
+    }
+
 }
