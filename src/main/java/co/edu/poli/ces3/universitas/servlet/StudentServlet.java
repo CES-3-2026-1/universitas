@@ -143,4 +143,127 @@ public class StudentServlet extends HttpServlet {
         out.flush();
     }
 
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String method = req.getMethod();
+        if (method.equalsIgnoreCase("PATCH")) {
+            doPatch(req, resp);
+        } else {
+            super.service(req, resp);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido en la URL\"}");
+            out.flush();
+            return;
+        }
+
+        try {
+            Student updatedStudent = this.gson.fromJson(request.getReader(), Student.class);
+            if (updatedStudent == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\": \"El cuerpo de la petición no puede estar vacío\"}");
+                out.flush();
+                return;
+            }
+
+            if (updatedStudent.getId() != null && !updatedStudent.getId().equals(studentId)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\": \"El ID del cuerpo no coincide con el ID de la URL\"}");
+                out.flush();
+                return;
+            }
+
+            int index = -1;
+            for (int i = 0; i < students.size(); i++) {
+                if (students.get(i).getId().equals(studentId)) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index != -1) {
+                updatedStudent.setId(studentId); // Aseguramos que el ID se mantenga
+                students.set(index, updatedStudent);
+                out.print(this.gson.toJson(updatedStudent));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"Estudiante no encontrado\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"Error al procesar el JSON: " + e.getMessage() + "\"}");
+        }
+        out.flush();
+    }
+
+    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido en la URL\"}");
+            out.flush();
+            return;
+        }
+
+        try {
+            Student patchData = this.gson.fromJson(request.getReader(), Student.class);
+            if (patchData == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\": \"El cuerpo de la petición no puede estar vacío\"}");
+                out.flush();
+                return;
+            }
+
+            if (patchData.getId() != null && !patchData.getId().equals(studentId)) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\": \"El ID del cuerpo no coincide con el ID de la URL\"}");
+                out.flush();
+                return;
+            }
+
+            Student studentToUpdate = null;
+            for (Student s : students) {
+                if (s.getId().equals(studentId)) {
+                    studentToUpdate = s;
+                    break;
+                }
+            }
+
+            if (studentToUpdate != null) {
+                if (patchData.getFirstName() != null) studentToUpdate.setFirstName(patchData.getFirstName());
+                if (patchData.getLastName() != null) studentToUpdate.setLastName(patchData.getLastName());
+                if (patchData.getDocument() != null) studentToUpdate.setDocument(patchData.getDocument());
+                if (patchData.getAge() != 0) studentToUpdate.setAge(patchData.getAge());
+                if (patchData.getEmail() != null) studentToUpdate.setEmail(patchData.getEmail());
+                if (patchData.getPhoneNumber() != null) studentToUpdate.setPhoneNumber(patchData.getPhoneNumber());
+                if (patchData.getAddress() != null) studentToUpdate.setAddress(patchData.getAddress());
+                if (patchData.getGpa() != 0.0) studentToUpdate.setGpa(patchData.getGpa());
+                if (patchData.getSubjects() != null && !patchData.getSubjects().isEmpty()) studentToUpdate.setSubjects(patchData.getSubjects());
+                
+                out.print(this.gson.toJson(studentToUpdate));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"Estudiante no encontrado\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"Error al procesar el JSON: " + e.getMessage() + "\"}");
+        }
+        out.flush();
+    }
+
 }
