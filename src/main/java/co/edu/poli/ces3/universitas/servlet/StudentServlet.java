@@ -32,7 +32,7 @@ public class StudentServlet extends HttpServlet {
                 21,
                 "andres.perez@poli.edu.co",
                 "3001234567",
-                "Calle 10",
+                "3001234567",
                 4.5
         ));
         students.add(new Student(
@@ -108,6 +108,88 @@ public class StudentServlet extends HttpServlet {
 
         response.setStatus(HttpServletResponse.SC_CREATED);
         out.print(this.gson.toJson(newStudent));
+        out.flush();
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+        Student updatedStudent = this.gson.fromJson(request.getReader(), Student.class);
+
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido\"}");
+        } else {
+            int index = -1;
+            for (int i = 0; i < students.size(); i++) {
+                if (students.get(i).getId().equals(studentId)) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index != -1) {
+                updatedStudent.setId(studentId); // Mantenemos el ID original
+                students.set(index, updatedStudent);
+                out.print(this.gson.toJson(updatedStudent));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"Estudiante no encontrado\"}");
+            }
+        }
+        out.flush();
+    }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String method = req.getMethod();
+        if (method.equalsIgnoreCase("PATCH")) {
+            doPatch(req, resp);
+        } else {
+            super.service(req, resp);
+        }
+    }
+
+    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+        Student partialStudent = this.gson.fromJson(request.getReader(), Student.class);
+
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido\"}");
+        } else {
+            Student existingStudent = null;
+            for (Student s : students) {
+                if (s.getId().equals(studentId)) {
+                    existingStudent = s;
+                    break;
+                }
+            }
+
+            if (existingStudent != null) {
+                if (partialStudent.getDocument() != null) existingStudent.setDocument(partialStudent.getDocument());
+                if (partialStudent.getFirstName() != null) existingStudent.setFirstName(partialStudent.getFirstName());
+                if (partialStudent.getLastName() != null) existingStudent.setLastName(partialStudent.getLastName());
+                if (partialStudent.getAge() != 0) existingStudent.setAge(partialStudent.getAge());
+                if (partialStudent.getEmail() != null) existingStudent.setEmail(partialStudent.getEmail());
+                if (partialStudent.getPhoneNumber() != null) existingStudent.setPhoneNumber(partialStudent.getPhoneNumber());
+                if (partialStudent.getAddress() != null) existingStudent.setAddress(partialStudent.getAddress());
+                if (partialStudent.getGpa() != 0.0) existingStudent.setGpa(partialStudent.getGpa());
+
+                out.print(this.gson.toJson(existingStudent));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"Estudiante no encontrado\"}");
+            }
+        }
         out.flush();
     }
 
