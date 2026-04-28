@@ -1,0 +1,186 @@
+{
+  "info": {
+    "_postman_id": "b1e2e1c2-4c3a-4e2a-9b1a-123456789abc",
+    "name": "Universitas API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get all students",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student"]
+        }
+      }
+    },
+    {
+      "name": "Get student by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student?id={{studentId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student"],
+          "query": [
+            {"key": "id", "value": "{{studentId}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create student",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"document\": \"12345678\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"age\": 20,\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"555-1234\",\n  \"address\": \"123 Main St\",\n  \"gpa\": 4.0\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/student",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student"]
+        }
+      }
+    },
+    {
+      "name": "Update student",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{studentId}}\",\n  \"document\": \"12345678\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"age\": 21,\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"555-1234\",\n  \"address\": \"123 Main St\",\n  \"gpa\": 4.1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/student",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student"]
+        }
+      }
+    },
+    {
+      "name": "Delete student",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/student?id={{studentId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["student"],
+          "query": [
+            {"key": "id", "value": "{{studentId}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get all subjects",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/subject",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["subject"]
+        }
+      }
+    },
+    {
+      "name": "Get subject by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/subject?id={{subjectId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["subject"],
+          "query": [
+            {"key": "id", "value": "{{subjectId}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create subject",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"MAT101\",\n  \"name\": \"Matemáticas\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/subject",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["subject"]
+        }
+      }
+    },
+    {
+      "name": "Update subject",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{subjectId}}\",\n  \"code\": \"MAT101\",\n  \"name\": \"Matemáticas Avanzadas\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/subject",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["subject"]
+        }
+      }
+    },
+    {
+      "name": "Delete subject",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/subject?id={{subjectId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["subject"],
+          "query": [
+            {"key": "id", "value": "{{subjectId}}"}
+          ]
+        }
+      }
+    }
+  ]
+}
+

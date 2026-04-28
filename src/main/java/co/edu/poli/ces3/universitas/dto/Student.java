@@ -124,4 +124,12 @@ public class Student {
         System.out.println("Student 1: " + student1);
         System.out.println("Student 2: " + student2);
     }
+
+    public static List<Student> getTestStudents() {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("1", "11111111", "Alice", "Smith", 20, "alice@example.com", "555-1111", "Street 1", 4.5));
+        students.add(new Student("2", "22222222", "Bob", "Johnson", 21, "bob@example.com", "555-2222", "Street 2", 4.2));
+        students.add(new Student("3", "33333333", "Charlie", "Williams", 22, "charlie@example.com", "555-3333", "Street 3", 3.9));
+        return students;
+    }
 }

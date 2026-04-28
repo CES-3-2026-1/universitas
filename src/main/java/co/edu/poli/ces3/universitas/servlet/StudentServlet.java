@@ -23,7 +23,10 @@ public class StudentServlet extends HttpServlet {
         this.students = new Vector<>();
         this.gson = new Gson();
 
-        // Inicializamos con algunos estudiantes de prueba
+        // Agrega los estudiantes de prueba con IDs fijas
+        this.students.addAll(co.edu.poli.ces3.universitas.dto.Student.getTestStudents());
+
+        // Inicializamos con algunos estudiantes de prueba adicionales
         students.add(new Student(
                 UUID.randomUUID().toString(),
                 "101010",
