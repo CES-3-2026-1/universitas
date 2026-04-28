@@ -10,7 +10,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private int age;
-    private List<String[]> subjects;
+    private List<Subject> subjects;
     
     // Additional attributes
     private String email;
@@ -63,11 +63,11 @@ public class Student {
     public int getAge() { return age; }
     public void setAge(int age) { this.age = age; }
 
-    public List<String[]> getSubjects() { return subjects; }
-    public void setSubjects(List<String[]> subjects) { this.subjects = subjects; }
+    public List<Subject> getSubjects() { return subjects; }
+    public void setSubjects(List<Subject> subjects) { this.subjects = subjects; }
 
     public void addSubject(String code, String name) {
-        this.subjects.add(new String[]{code, name});
+        this.subjects.add(new Subject(code, name));
     }
 
     public String getEmail() { return email; }
