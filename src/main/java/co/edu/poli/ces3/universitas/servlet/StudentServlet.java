@@ -143,4 +143,37 @@ public class StudentServlet extends HttpServlet {
         out.flush();
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String studentId = request.getParameter("id");
+        Student updatedStudent = this.gson.fromJson(request.getReader(), Student.class);
+
+        if (studentId == null || studentId.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print("{\"error\": \"El ID del estudiante es requerido\"}");
+        } else {
+            Student foundStudent = null;
+            for (int i = 0; i < students.size(); i++) {
+                if (students.get(i).getId().equals(studentId)) {
+                    foundStudent = students.get(i);
+                    updatedStudent.setId(studentId); // Ensure ID consistency
+                    students.set(i, updatedStudent);
+                    break;
+                }
+            }
+
+            if (foundStudent != null) {
+                out.print(this.gson.toJson(updatedStudent));
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\": \"Estudiante no encontrado\"}");
+            }
+        }
+        out.flush();
+    }
+
 }
