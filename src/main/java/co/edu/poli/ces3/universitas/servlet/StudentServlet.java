@@ -59,16 +59,18 @@ public class StudentServlet extends HttpServlet {
         ));
     }
 
+    // Maneja GET: /student (lista completa) o /student?id=... (un solo estudiante)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
+        // Obtiene el ID desde la URL (?id=123)
         String studentId = request.getParameter("id");
 
         if (studentId != null && !studentId.isEmpty()) {
-            // Buscamos un estudiante por ID
+            // Lógica para buscar y devolver un solo estudiante
             Student foundStudent = null;
             for (Student s : students) {
                 if (s.getId().equals(studentId)) {
@@ -84,33 +86,34 @@ public class StudentServlet extends HttpServlet {
                 out.print("{\"error\": \"Estudiante no encontrado\"}");
             }
         } else {
-            // Devolvemos la lista completa
+            // Devuelve la lista completa en formato JSON
             out.print(this.gson.toJson(this.students));
         }
         out.flush();
     }
 
+    // Maneja POST: /student (Crea un nuevo estudiante usando el JSON del Body)
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        // Leemos el estudiante desde el cuerpo de la petición (JSON)
+        // Convierte el JSON recibido en el cuerpo de la petición a un objeto Student
         Student newStudent = this.gson.fromJson(request.getReader(), Student.class);
 
-        // Generamos un ID si no viene en la petición
         if (newStudent.getId() == null || newStudent.getId().isEmpty()) {
             newStudent.setId(UUID.randomUUID().toString());
         }
 
         this.students.add(newStudent);
 
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        response.setStatus(HttpServletResponse.SC_CREATED); // 201 Created
         out.print(this.gson.toJson(newStudent));
         out.flush();
     }
 
+    // Maneja DELETE: /student?id=... (Elimina por ID recibido en la URL)
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -143,6 +146,7 @@ public class StudentServlet extends HttpServlet {
         out.flush();
     }
 
+    // Maneja PUT: /student?id=... (Actualiza datos usando el ID de la URL y el JSON del Body)
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
