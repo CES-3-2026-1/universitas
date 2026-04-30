@@ -180,7 +180,134 @@
           ]
         }
       }
+    },
+    {
+      "name": "Get all materias",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/materias",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"]
+        }
+      }
+    },
+    {
+      "name": "Get materia by code",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/materias?code={{materiaCode}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"],
+          "query": [
+            {"key": "code", "value": "{{materiaCode}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get materias quinto semestre",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/materias/quinto",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias", "quinto"]
+        }
+      }
+    },
+    {
+      "name": "Create materia",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"MAT200\",\n  \"name\": \"Redes\",\n  \"fechaInicio\": \"2024-07-01\",\n  \"fechaFin\": \"2024-12-01\",\n  \"semestre\": 6\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/materias",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"]
+        }
+      }
+    },
+    {
+      "name": "Update materia",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"{{materiaCode}}\",\n  \"name\": \"Redes Avanzadas\",\n  \"fechaInicio\": \"2024-07-01\",\n  \"fechaFin\": \"2024-12-01\",\n  \"semestre\": 6\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/materias?code={{materiaCode}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"],
+          "query": [
+            {"key": "code", "value": "{{materiaCode}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete materia",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/materias?code={{materiaCode}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"],
+          "query": [
+            {"key": "code", "value": "{{materiaCode}}"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Patch materia (actualización parcial)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Redes Básicas\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/materias?code={{materiaCode}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["materias"],
+          "query": [
+            {"key": "code", "value": "{{materiaCode}}"}
+          ]
+        }
+      }
     }
   ]
 }
-
