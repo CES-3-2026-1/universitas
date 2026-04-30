@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.UUID;
 
@@ -24,9 +26,11 @@ public class SubjectServlet extends HttpServlet {
         this.gson = new Gson();
 
         // Inicializamos con algunas materias de prueba
-        subjects.add(new Subject(UUID.randomUUID().toString(), "Matemáticas", 4));
-        subjects.add(new Subject(UUID.randomUUID().toString(), "Programación", 3));
-        subjects.add(new Subject("sub-123", "Bases de Datos", 3));
+        subjects.add(new Subject("101", "Java", "2024-01-15", "2024-05-30", 5));
+        subjects.add(new Subject("102", "Python", "2024-01-15", "2024-05-30", 5));
+        subjects.add(new Subject("103", "Bases de Datos", "2024-01-15", "2024-05-30", 5)); // > 8 chars
+        subjects.add(new Subject("104", "Web 1", "2024-01-15", "2024-05-30", 5));
+        subjects.add(new Subject("105", "Cálculo", "2024-01-15", "2024-05-30", 4)); // Not semester 5
     }
 
     @Override
@@ -35,25 +39,19 @@ public class SubjectServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        String subjectId = request.getParameter("id");
+        List<Subject> filteredSubjects = new ArrayList<>();
 
-        if (subjectId != null && !subjectId.isEmpty()) {
-            Subject found = null;
-            for (Subject s : subjects) {
-                if (s.getId().equals(subjectId)) {
-                    found = s;
-                    break;
-                }
+        for (Subject s : subjects) {
+            if (s.getSemester() == 5 && s.getName().length() <= 8) {
+                filteredSubjects.add(s);
             }
+        }
 
-            if (found != null) {
-                out.print(this.gson.toJson(found));
-            } else {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                out.print("{\"error\": \"Materia no encontrada\"}");
-            }
+        if (filteredSubjects.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            out.print("{\"error\": \"No se encontraron materias del semestre 5 con nombre de máximo 8 caracteres\"}");
         } else {
-            out.print(this.gson.toJson(this.subjects));
+            out.print(this.gson.toJson(filteredSubjects));
         }
         out.flush();
     }
@@ -66,8 +64,8 @@ public class SubjectServlet extends HttpServlet {
 
         try {
             Subject newSubject = this.gson.fromJson(request.getReader(), Subject.class);
-            if (newSubject.getId() == null || newSubject.getId().isEmpty()) {
-                newSubject.setId(UUID.randomUUID().toString());
+            if (newSubject.getCode() == null || newSubject.getCode().isEmpty()) {
+                newSubject.setCode(UUID.randomUUID().toString());
             }
             this.subjects.add(newSubject);
             response.setStatus(HttpServletResponse.SC_CREATED);
@@ -85,10 +83,10 @@ public class SubjectServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        String subjectId = request.getParameter("id");
-        if (subjectId == null || subjectId.isEmpty()) {
+        String subjectCode = request.getParameter("code");
+        if (subjectCode == null || subjectCode.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            out.print("{\"error\": \"El ID de la materia es requerido en la URL\"}");
+            out.print("{\"error\": \"El código de la materia es requerido en la URL\"}");
             out.flush();
             return;
         }
@@ -102,23 +100,16 @@ public class SubjectServlet extends HttpServlet {
                 return;
             }
 
-            if (updatedSubject.getId() != null && !updatedSubject.getId().equals(subjectId)) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.print("{\"error\": \"El ID del cuerpo no coincide con el ID de la URL\"}");
-                out.flush();
-                return;
-            }
-
             int index = -1;
             for (int i = 0; i < subjects.size(); i++) {
-                if (subjects.get(i).getId().equals(subjectId)) {
+                if (subjects.get(i).getCode().equals(subjectCode)) {
                     index = i;
                     break;
                 }
             }
 
             if (index != -1) {
-                updatedSubject.setId(subjectId);
+                updatedSubject.setCode(subjectCode);
                 subjects.set(index, updatedSubject);
                 out.print(this.gson.toJson(updatedSubject));
             } else {
@@ -138,14 +129,14 @@ public class SubjectServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        String subjectId = request.getParameter("id");
-        if (subjectId == null || subjectId.isEmpty()) {
+        String subjectCode = request.getParameter("code");
+        if (subjectCode == null || subjectCode.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            out.print("{\"error\": \"El ID de la materia es requerido\"}");
+            out.print("{\"error\": \"El código de la materia es requerido\"}");
         } else {
             Subject toDelete = null;
             for (Subject s : subjects) {
-                if (s.getId().equals(subjectId)) {
+                if (s.getCode().equals(subjectCode)) {
                     toDelete = s;
                     break;
                 }
@@ -176,10 +167,10 @@ public class SubjectServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        String subjectId = request.getParameter("id");
-        if (subjectId == null || subjectId.isEmpty()) {
+        String subjectCode = request.getParameter("code");
+        if (subjectCode == null || subjectCode.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            out.print("{\"error\": \"El ID de la materia es requerido en la URL\"}");
+            out.print("{\"error\": \"El código de la materia es requerido en la URL\"}");
             out.flush();
             return;
         }
@@ -195,7 +186,7 @@ public class SubjectServlet extends HttpServlet {
 
             Subject toUpdate = null;
             for (Subject s : subjects) {
-                if (s.getId().equals(subjectId)) {
+                if (s.getCode().equals(subjectCode)) {
                     toUpdate = s;
                     break;
                 }
@@ -203,7 +194,9 @@ public class SubjectServlet extends HttpServlet {
 
             if (toUpdate != null) {
                 if (patchData.getName() != null) toUpdate.setName(patchData.getName());
-                if (patchData.getCredits() != 0) toUpdate.setCredits(patchData.getCredits());
+                if (patchData.getStartDate() != null) toUpdate.setStartDate(patchData.getStartDate());
+                if (patchData.getEndDate() != null) toUpdate.setEndDate(patchData.getEndDate());
+                if (patchData.getSemester() != 0) toUpdate.setSemester(patchData.getSemester());
                 out.print(this.gson.toJson(toUpdate));
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
